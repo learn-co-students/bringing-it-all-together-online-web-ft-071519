@@ -1,8 +1,9 @@
-require 'pry'
 
+require 'pry'
+  
 class Dog
   
-  
+
   attr_accessor :name, :breed
   attr_reader :id
   
@@ -12,6 +13,7 @@ class Dog
     @id = id
   end
   
+
   def self.create_table
     sql = <<-SQL
       CREATE TABLE dogs(
@@ -70,7 +72,23 @@ class Dog
     sql = <<-SQL
       SELECT * FROM dogs WHERE id = ?
     SQL
-    DB[:conn].execute(sql, id)[0]
+    
+    row =DB[:conn].execute(sql, id)[0]
+    dog = Dog.new(name: row[1],breed: row[2], id: row[0])
   end
   
+  def self.find_or_create_by(hash)
+    sql = <<-SQL
+      SELECT * FROM dogs WHERE name = ? AND breed= ?
+    SQL
+    row = DB[:conn].execute(sql, hash[:name],hash[:breed])[0]
+    if !row.empty?
+      dog=Dog.new(name: row[1],breed: row[2], id: row[0])
+    else
+      dog=self.create(hash)
+    end
+  end
+  
+
+
 end
