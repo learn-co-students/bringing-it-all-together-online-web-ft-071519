@@ -78,7 +78,7 @@ class Dog
   end
   
   def self.find_or_create_by(hash)
-    binding.pry
+
     sql = <<-SQL
       SELECT * FROM dogs WHERE name = ? AND breed= ?
     SQL
@@ -95,6 +95,13 @@ class Dog
     end
   end
   
-
+  def self.find_by_name(name)
+    sql = <<-SQL
+      SELECT * FROM dogs WHERE name = ?
+    SQL
+    
+    row =DB[:conn].execute(sql, name)[0]
+    dog = Dog.new(name: row[1],breed: row[2], id: row[0])
+  end
 
 end
