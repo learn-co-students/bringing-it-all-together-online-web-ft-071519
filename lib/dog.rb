@@ -57,6 +57,9 @@ class Dog
     sql = "UPDATE dogs SET name = ?, breed = ? WHERE id = ?"
     
     DB[:conn].execute(sql, self.name, self.breed, self.id)
+    sql = "SELECT * FROM dogs WHERE name = ? AND breed = ? AND id = ?"
+    DB[:conn].execute(sql, self.name, self.breed, self.id)
+    
         Dog.new(name: DB[:conn].execute(sql, self.name, self.breed, self.id)[0][1],breed: DB[:conn].execute(sql, self.name, self.breed, self.id)[0][2],
       id: DB[:conn].execute(sql, self.name, self.breed, self.id)[0][0])
   end
@@ -78,6 +81,7 @@ class Dog
     
     row =DB[:conn].execute(sql, id)[0]
     dog = Dog.new(name: row[1],breed: row[2], id: row[0])
+
   end
   
   def self.find_or_create_by(hash)
@@ -102,5 +106,9 @@ class Dog
     row =DB[:conn].execute(sql, name)[0]
     dog = Dog.new(name: row[1],breed: row[2], id: row[0])
   end
+
+  
+
+
 
 end
