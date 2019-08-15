@@ -1,4 +1,7 @@
+require 'pry'
+
 class Dog
+  
   
   attr_accessor :name, :breed
   attr_reader :id
@@ -53,10 +56,9 @@ class Dog
       id: DB[:conn].execute(sql, self.name, self.breed, self.id)[0][0])
   end
   
-  def self.create(name,breed)
-    dog = Dog.new(name: name, breed: breed)
+  def self.create(hash)
+    dog = Dog.new(name: hash[:name],breed: hash[:breed])
     dog.save
     dog
-    
   end
 end
