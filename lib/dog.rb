@@ -45,14 +45,17 @@ class Dog
       SQL
       
       DB[:conn].execute(sql,self.name,self.breed)   
-      
+      @id = DB[:conn].execute("SELECT last_insert_rowid() FROM dogs")[0][0]
       Dog.new(name: DB[:conn].execute("SELECT last_insert_rowid() FROM dogs")[0][1],breed: DB[:conn].execute("SELECT last_insert_rowid() FROM dogs")[0][2],
       id: DB[:conn].execute("SELECT last_insert_rowid() FROM dogs")[0][0])
+      
     end
   end
   
   def update
+      
     sql = "UPDATE dogs SET name = ?, breed = ? WHERE id = ?"
+    
     DB[:conn].execute(sql, self.name, self.breed, self.id)
         Dog.new(name: DB[:conn].execute(sql, self.name, self.breed, self.id)[0][1],breed: DB[:conn].execute(sql, self.name, self.breed, self.id)[0][2],
       id: DB[:conn].execute(sql, self.name, self.breed, self.id)[0][0])
@@ -83,11 +86,12 @@ class Dog
       SELECT * FROM dogs WHERE name = ? AND breed= ?
     SQL
     row = DB[:conn].execute(sql, hash[:name],hash[:breed])
-    if !row.empty?
-      dog=Dog.new(name: row[0][1],breed: row[0][2], id: row[0][0])
-    else
-     dog=self.create(hash)
+    if row.empty?
+     dog = Dog.create(hash)
+    else 
+     dog = Dog.new(name: row[0][1],breed: row[0][2], id: row[0][0])
     end
+   
   end
   
   def self.find_by_name(name)
