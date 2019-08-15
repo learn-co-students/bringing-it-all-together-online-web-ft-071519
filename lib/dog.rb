@@ -82,11 +82,15 @@ class Dog
       SELECT * FROM dogs WHERE name = ? AND breed= ?
     SQL
     row = DB[:conn].execute(sql, hash[:name],hash[:breed])[0]
-    binding.pry
-    if !row.empty?
-      dog=Dog.new(name: row[1],breed: row[2], id: row[0])
+    
+    if row.empty?
+      
+     dog=Dog.new(name: row[1],breed: row[2], id: row[0])
+ 
     else
+     
       dog=self.create(hash)
+ 
     end
   end
   
